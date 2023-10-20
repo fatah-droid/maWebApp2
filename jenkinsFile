@@ -1,0 +1,19 @@
+node {
+
+
+        stage('checkout') {
+            // Get some code from a GitHub repository
+            git branch: 'develop', changelog: false, poll: false, url: 'https://github.com/fatah-droid/maWebApp2.git'
+            
+        }
+        stage('Build') {
+            echo 'je build'
+            sh 'mvn clean install package'
+     
+        }
+        stage('deploy to tomcat'){
+            echo 'déploiement'
+            deploy adapters: [tomcat8(credentialsId: 'creds_tomcat_master', path: '', url: 'http://172.28.64.2:8090/')], contextPath: null, war: '**/*.war'
+
+        }
+}
